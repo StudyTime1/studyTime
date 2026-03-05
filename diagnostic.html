@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Test</title>
+</head>
+<body>
+<div id="out" style="padding:20px;font-family:monospace;font-size:14px;background:#111;color:#eee;min-height:100vh;direction:ltr;word-break:break-all"></div>
+<script>
+var log = function(msg, color) {
+  var d = document.getElementById('out');
+  d.innerHTML += '<div style="color:'+(color||'#eee')+';margin-bottom:8px">'+msg+'</div>';
+};
+
+log('Starting tests...', '#aaa');
+log('UserAgent: ' + navigator.userAgent, '#888');
+
+// Test 1: Basic JS
+try {
+  var x = [1,2,3].map(function(n){return n*2;});
+  log('✅ Array.map works', '#4f4');
+} catch(e) { log('❌ Array.map: '+e.message, 'red'); }
+
+// Test 2: fetch
+log('fetch available: ' + (typeof fetch !== "undefined" ? "✅ YES" : "❌ NO"), typeof fetch !== "undefined" ? "#4f4" : "red");
+
+// Test 3: Script size test - can we eval 100KB?
+try {
+  var big = new Array(10000).join('var x=1;');
+  eval(big);
+  log('✅ eval 100KB works', '#4f4');
+} catch(e) { log('❌ eval 100KB: '+e.message, 'red'); }
+
+// Test 4: localStorage
+try {
+  localStorage.setItem('test','1');
+  log('✅ localStorage works', '#4f4');
+} catch(e) { log('❌ localStorage: '+e.message, 'red'); }
+
+// Test 5: External script
+log('Loading React from CDN...', '#ff0');
+var s = document.createElement('script');
+s.src = 'https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js';
+s.onload = function() { log('✅ CDN React loaded! version: '+React.version, '#4f4'); };
+s.onerror = function(e) { log('❌ CDN blocked! Error: '+JSON.stringify(e.type), 'red'); };
+document.head.appendChild(s);
+
+log('Done (waiting for CDN test...)', '#aaa');
+</script>
+</body>
+</html>
